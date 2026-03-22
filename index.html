@@ -18,7 +18,7 @@
 
     .menu { padding:20px; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; }
 
-    .card { background:white; border-radius:20px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1); }
+    .card { background:white; border-radius:20px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1); position:relative; }
 
     .card img { width:100%; height:150px; object-fit:cover; }
 
@@ -28,13 +28,9 @@
 
     .price { color:#388e3c; font-weight:600; }
 
-    .qty-control {
-      display:flex; justify-content:space-between; align-items:center; margin-top:10px;
-    }
+    .qty-control { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
 
-    .qty-btn {
-      background:#66bb6a; border:none; color:white; padding:5px 10px; border-radius:5px; cursor:pointer;
-    }
+    .qty-btn { background:#66bb6a; border:none; color:white; padding:5px 10px; border-radius:5px; cursor:pointer; }
 
     .floating-cart {
       position:fixed; bottom:20px; right:20px; background:#388e3c; color:white;
@@ -44,6 +40,16 @@
     .cart-popup {
       position:fixed; bottom:80px; right:20px; width:300px; background:white;
       border-radius:15px; padding:15px; display:none; box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .fly-img {
+      position:fixed;
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      pointer-events:none;
+      z-index:9999;
+      transition:all 0.8s ease-in-out;
     }
 
     footer { text-align:center; padding:20px; background:#c8e6c9; }
@@ -64,7 +70,7 @@
 
 <div class="menu" id="menu"></div>
 
-<div class="floating-cart" onclick="toggleCart()">🛒 Cart (<span id="count">0</span>)</div>
+<div class="floating-cart" id="cartIcon" onclick="toggleCart()">🛒 Cart (<span id="count">0</span>)</div>
 
 <div class="cart-popup" id="cartPopup">
   <h3>Your Cart</h3>
@@ -80,15 +86,15 @@
 
 <script>
 const menuItems = [
-  {name:"Bread", price:40, img:"https://source.unsplash.com/300x200/?bread"},
-  {name:"Sourdough", price:120, img:"https://source.unsplash.com/300x200/?sourdough"},
-  {name:"Brown Bread", price:60, img:"https://source.unsplash.com/300x200/?brown-bread"},
-  {name:"Multigrain Bread", price:80, img:"https://source.unsplash.com/300x200/?multigrain"},
-  {name:"Birthday Cake", price:900, img:"https://source.unsplash.com/300x200/?cake"},
-  {name:"Cup Cakes", price:100, img:"https://source.unsplash.com/300x200/?cupcake"},
-  {name:"Sugar Free Cake", price:1000, img:"https://source.unsplash.com/300x200/?dessert"},
-  {name:"Cheese Cake", price:750, img:"https://source.unsplash.com/300x200/?cheesecake"},
-  {name:"Croissant", price:120, img:"https://source.unsplash.com/300x200/?croissant"}
+  {name:"Bread", price:40, img:"https://images.unsplash.com/photo-1608198093002-ad4e005484ec"},
+  {name:"Sourdough", price:120, img:"https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b"},
+  {name:"Brown Bread", price:60, img:"https://images.unsplash.com/photo-1509440159596-0249088772ff"},
+  {name:"Multigrain Bread", price:80, img:"https://images.unsplash.com/photo-1512058564366-c9e3e046c79a"},
+  {name:"Birthday Cake", price:900, img:"https://images.unsplash.com/photo-1599785209707-28e1e3b6f7a9"},
+  {name:"Cup Cakes", price:100, img:"https://images.unsplash.com/photo-1589308078054-832f0ef2c66f"},
+  {name:"Sugar Free Cake", price:1000, img:"https://images.unsplash.com/photo-1551024601-bec78aea704b"},
+  {name:"Cheese Cake", price:750, img:"https://images.unsplash.com/photo-1565958011703-44f9829ba187"},
+  {name:"Croissant", price:120, img:"https://images.unsplash.com/photo-1509440159596-0249088772ff"}
 ];
 
 let cart = [];
@@ -108,9 +114,9 @@ function renderMenu(list){
           <div class="title">${item.name}</div>
           <div class="price">₹${item.price}</div>
           <div class="qty-control">
-            <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, -1)">-</button>
+            <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, -1, this)">-</button>
             <span>${qty}</span>
-            <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, 1)">+</button>
+            <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, 1, this)">+</button>
           </div>
         </div>
       </div>
@@ -118,7 +124,29 @@ function renderMenu(list){
   });
 }
 
-function changeQty(name, price, delta){
+function animateToCart(imgSrc, btn){
+  const img = document.createElement('img');
+  img.src = imgSrc;
+  img.className = 'fly-img';
+
+  const rect = btn.getBoundingClientRect();
+  img.style.left = rect.left + 'px';
+  img.style.top = rect.top + 'px';
+
+  document.body.appendChild(img);
+
+  const cart = document.getElementById('cartIcon').getBoundingClientRect();
+
+  setTimeout(()=>{
+    img.style.left = cart.left + 'px';
+    img.style.top = cart.top + 'px';
+    img.style.opacity = 0;
+  },10);
+
+  setTimeout(()=> img.remove(), 800);
+}
+
+function changeQty(name, price, delta, btn){
   let item = cart.find(i=>i.name===name);
 
   if(!item && delta>0){
@@ -126,6 +154,11 @@ function changeQty(name, price, delta){
   } else if(item){
     item.qty += delta;
     if(item.qty<=0){ cart = cart.filter(i=>i.name!==name); }
+  }
+
+  if(delta>0){
+    const product = menuItems.find(i=>i.name===name);
+    animateToCart(product.img, btn);
   }
 
   updateCart();
