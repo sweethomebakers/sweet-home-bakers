@@ -70,7 +70,8 @@
 
 <header>
   <h1>🍰 Sweet Home Bakers</h1>
-  <p>Delicious Devouring • Mumbai</p>
+  <p>Delicious Scrumptious • Mumbai</p>
+  <p style="color:#2e7d32;font-weight:600;">🚚 Home Delivery Available</p>
 </header>
 
 <div class="top-bar">
@@ -87,6 +88,12 @@
   <div id="cartItems"></div>
   <h4>Total: ₹<span id="total">0</span></h4>
   <button onclick="goToCheckout()">Checkout</button>
+</div>
+
+<!-- Discount Banner -->
+<div style="background:#66bb6a;color:white;text-align:center;padding:15px;font-weight:600;">
+  🎉 Use Code <b>SWEET10</b> for 10% OFF | <b>BAKE20</b> for 20% OFF on orders above ₹999
+  ⏳ Offer ends in <span id="timer">05:00</span>
 </div>
 
 <footer>
@@ -198,6 +205,15 @@ setInterval(()=>{
   reviewIndex = (reviewIndex + 1) % reviews.length;
   document.getElementById('reviewBox').innerText = reviews[reviewIndex];
 },3000);
+
+// Countdown Timer
+let time = 300;
+setInterval(()=>{
+  let minutes = Math.floor(time/60);
+  let seconds = time % 60;
+  document.getElementById('timer').innerText = `${minutes}:${seconds<10?'0':''}${seconds}`;
+  if(time>0) time--;
+},1000);
 }
 
 function searchItems(query){
