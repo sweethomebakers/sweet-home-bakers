@@ -4,21 +4,52 @@
   <title>Sweet Home Bakers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { margin:0; font-family: Arial; background: linear-gradient(to right, #fff8e1, #ffe0b2); color:#5d4037; }
+    body { margin:0; font-family: 'Georgia', serif; background: linear-gradient(to right, #dcedc8, #c5e1a5); color:#2e7d32; }
     header { text-align:center; padding:30px; }
-    h1 { font-size:40px; }
+    h1 { font-size:42px; letter-spacing:1px; }
     .container { padding:20px; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
-    .card { background:white; border-radius:15px; padding:10px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-    img { width:100%; height:150px; object-fit:cover; border-radius:10px; }
-    button { width:100%; padding:10px; margin-top:5px; border:none; border-radius:8px; cursor:pointer; }
-    .upi { background:#ff9800; color:white; font-weight:bold; }
+
+    /* Menu card style */
+    .menu-card {
+      background:#ffffff;
+      border-radius:15px;
+      padding:20px;
+      max-width:600px;
+      margin:20px auto;
+      box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .menu-item {
+      display:flex;
+      justify-content:space-between;
+      border-bottom:1px dashed #ccc;
+      padding:10px 0;
+      font-size:18px;
+    }
+
+    .menu-item:last-child { border-bottom:none; }
+
+    button {
+      width:100%;
+      padding:10px;
+      margin-top:10px;
+      border:none;
+      border-radius:8px;
+      background:#8bc34a;
+      color:white;
+      cursor:pointer;
+    }
+
     .popup { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; }
     .popup-box { background:white; padding:20px; border-radius:15px; text-align:center; }
-    .live { position:fixed; bottom:10px; left:10px; background:black; color:white; padding:10px; border-radius:10px; }
-    iframe { border-radius:10px; height:200px; }
+
+    .cart { background:white; padding:15px; border-radius:10px; margin:20px auto; max-width:600px; }
+
+    iframe { border-radius:10px; height:200px; width:100%; }
+
     .whatsapp { position:fixed; bottom:20px; right:20px; background:#25D366; color:white; padding:15px; border-radius:50%; font-size:20px; cursor:pointer; }
-    .cart { background:white; padding:15px; border-radius:10px; margin-top:20px; }
+
+    .live { position:fixed; bottom:10px; left:10px; background:black; color:white; padding:10px; border-radius:10px; }
   </style>
 </head>
 
@@ -35,66 +66,69 @@
 <header>
   <h1>Sweet Home Bakers</h1>
   <p>Bangalore | Home Delivery / Pickup</p>
-  <p style="color:red;">🔥 Fresh & delicious items available</p>
 </header>
 
 <div class="container">
-  <h2>Our Menu</h2>
-  <div class="grid" id="menu"></div>
+
+  <div class="menu-card">
+    <h2 style="text-align:center;">🍰 Bakery Menu</h2>
+
+    <div class="menu-item">
+      <span>Cheesecake</span>
+      <span>₹750</span>
+    </div>
+
+    <div class="menu-item">
+      <span>Puff</span>
+      <span>₹50</span>
+    </div>
+
+    <div class="menu-item">
+      <span>Cupcake</span>
+      <span>₹80</span>
+    </div>
+
+    <button onclick="addToCart('Cheesecake',750)">Add Cheesecake</button>
+    <button onclick="addToCart('Puff',50)">Add Puff</button>
+    <button onclick="addToCart('Cupcake',80)">Add Cupcake</button>
+  </div>
 
   <div class="cart">
     <h3>🛒 Cart</h3>
     <div id="cartItems"></div>
     <p>Total: ₹<span id="total">0</span></p>
-    <button class="upi" onclick="checkout()">Checkout</button>
+    <button onclick="checkout()">Checkout</button>
   </div>
 
-  <h2>📍 Location</h2>
-  <iframe src="https://www.google.com/maps?q=Bangalore&output=embed" width="100%"></iframe>
+  <h2 style="text-align:center;">📍 Location</h2>
+  <iframe src="https://www.google.com/maps?q=Bangalore&output=embed"></iframe>
 
-  <h2>📞 Contact</h2>
-  <p>WhatsApp: +91 88888 88888</p>
-  <p>Instagram: @sweethomebakerss</p>
+  <h2 style="text-align:center;">📞 Contact</h2>
+  <p style="text-align:center;">WhatsApp: +91 88888 88888</p>
+  <p style="text-align:center;">Instagram: @sweethomebakerss</p>
+
 </div>
 
 <div id="live" class="live"></div>
 <div class="whatsapp" onclick="openWhatsApp()">💬</div>
 
 <script>
-const items = [
-  {name:"Cheesecake", price:750, img:"https://images.unsplash.com/photo-1605478906955-69c9c6fbd0c3"},
-  {name:"Puff", price:50, img:"https://images.unsplash.com/photo-1604908176997-43198f4aa6b6"},
-  {name:"Cupcake", price:80, img:"https://images.unsplash.com/photo-1589307004396-7c1d6b5c9b41"}
-];
+let cart=[];
 
-let cart = [];
-
-function loadMenu(){
-  const menu = document.getElementById("menu");
-  items.forEach(item=>{
-    menu.innerHTML += `
-      <div class="card">
-        <img src="${item.img}">
-        <h3>${item.name}</h3>
-        <p>₹${item.price}</p>
-        <button onclick='addToCart(${JSON.stringify(item)})'>Add to Cart</button>
-      </div>
-    `;
-  });
+function addToCart(name,price){
+  cart.push({name,price});
+  updateCart();
 }
 
-function addToCart(item){ cart.push(item); updateCart(); }
-
 function updateCart(){
-  const cartDiv = document.getElementById("cartItems");
-  const totalEl = document.getElementById("total");
-  cartDiv.innerHTML="";
+  let cartDiv=document.getElementById('cartItems');
   let total=0;
-  cart.forEach(i=>{
-    cartDiv.innerHTML += `<p>${i.name} - ₹${i.price}</p>`;
-    total+=i.price;
+  cartDiv.innerHTML="";
+  cart.forEach(item=>{
+    cartDiv.innerHTML+=`<p>${item.name} - ₹${item.price}</p>`;
+    total+=item.price;
   });
-  totalEl.innerText=total;
+  document.getElementById('total').innerText=total;
 }
 
 function checkout(){ alert("Order placed! We will contact you."); }
@@ -106,11 +140,10 @@ function openWhatsApp(){
 function closePopup(){ document.getElementById('popup').style.display='none'; }
 
 setInterval(()=>{
-  const random = items[Math.floor(Math.random()*items.length)].name;
-  document.getElementById('live').innerText = "Someone ordered " + random + " 🍰";
+  const items=["Cheesecake","Puff","Cupcake"];
+  const random=items[Math.floor(Math.random()*items.length)];
+  document.getElementById('live').innerText="Someone ordered "+random+" 🍰";
 },3000);
-
-loadMenu();
 </script>
 
 </body>
