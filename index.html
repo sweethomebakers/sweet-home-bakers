@@ -94,8 +94,19 @@
   <p>📸 Instagram: @sweethomebakers</p>
 </footer>
 
+<!-- Review Slider -->
+<div style="padding:30px;text-align:center;">
+  <h2>⭐ Customer Reviews</h2>
+  <div id="reviewBox" style="margin-top:20px;font-size:18px;font-style:italic;">
+    Amazing cakes! Loved the cheesecake 😍
+  </div>
+</div>
+
 <script>
 const menuItems = [
+  {name:"Puff", price:50, img:"https://images.unsplash.com/photo-1604908176997-4311cbb91f9b"},
+  {name:"Cutlet", price:70, img:"https://images.unsplash.com/photo-1604908554168-9f3c0c0b0e2a"},
+  {name:"Ragi Cake", price:120, img:"https://images.unsplash.com/photo-1578985545062-69928b1d9587"},
   {name:"Bread", price:40, img:"https://images.unsplash.com/photo-1608198093002-ad4e005484ec"},
   
   {name:"Brown Bread", price:60, img:"https://images.unsplash.com/photo-1509440159596-0249088772ff"},
@@ -173,6 +184,20 @@ function changeQty(name, price, delta, btn){
 
   updateCart();
   renderMenu(menuItems);
+
+// Review Slider
+const reviews = [
+  "Amazing cakes! Loved the cheesecake 😍",
+  "Best bakery in Mumbai! Fresh and tasty 🥐",
+  "Beautiful presentation and great taste 🎂",
+  "Affordable and delicious, highly recommend! ⭐"
+];
+
+let reviewIndex = 0;
+setInterval(()=>{
+  reviewIndex = (reviewIndex + 1) % reviews.length;
+  document.getElementById('reviewBox').innerText = reviews[reviewIndex];
+},3000);
 }
 
 function searchItems(query){
