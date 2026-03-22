@@ -3,52 +3,134 @@
 <head>
   <title>Sweet Home Bakers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    body { margin:0; font-family:'Poppins', sans-serif; background:#f1f8e9; }
-    header { text-align:center; padding:20px; }
+    body {
+      margin:0;
+      font-family:'Poppins', sans-serif;
+      background: linear-gradient(135deg, #fff8f0, #ffe0b2);
+    }
 
-    .top-bar { display:flex; justify-content:space-between; padding:10px 20px; }
+    header {
+      text-align:center;
+      padding:20px;
+    }
+
+    h1 { font-weight:600; }
+
+    .top-bar {
+      display:flex;
+      justify-content:space-between;
+      padding:10px 20px;
+      gap:10px;
+    }
 
     .search-box {
-      width:60%; padding:10px; border-radius:20px; border:1px solid #ccc;
+      flex:1;
+      padding:12px;
+      border-radius:25px;
+      border:none;
+      outline:none;
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
     }
 
     .login-btn {
-      padding:10px 15px; background:#43a047; color:white; border:none; border-radius:10px; cursor:pointer;
+      padding:10px 15px;
+      border:none;
+      border-radius:20px;
+      background:#ff7043;
+      color:white;
+      cursor:pointer;
     }
 
-    .container { display:flex; }
+    .container {
+      display:flex;
+    }
 
     .menu {
-      width:65%; padding:20px;
+      width:65%;
+      padding:20px;
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:20px;
     }
 
-    .menu-card {
-      background:white; border-radius:15px; padding:15px; margin-bottom:15px;
-      box-shadow:0 5px 15px rgba(0,0,0,0.1); transition:0.3s;
+    .card {
+      background:white;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 8px 20px rgba(0,0,0,0.1);
+      transition:0.3s;
     }
 
-    .menu-card:hover { transform:scale(1.02); }
+    .card:hover {
+      transform:translateY(-8px) scale(1.02);
+    }
 
-    .menu-item { display:flex; justify-content:space-between; }
+    .card img {
+      width:100%;
+      height:150px;
+      object-fit:cover;
+    }
 
-    img { width:100%; border-radius:10px; margin:10px 0; }
+    .card-body {
+      padding:15px;
+    }
+
+    .title {
+      font-weight:600;
+      margin-bottom:5px;
+    }
+
+    .price {
+      color:#ff7043;
+      font-weight:600;
+    }
+
+    .badge {
+      font-size:11px;
+      color:red;
+    }
 
     button {
-      width:100%; padding:10px; border:none; border-radius:10px;
-      background:#43a047; color:white; cursor:pointer; transition:0.3s;
+      width:100%;
+      margin-top:10px;
+      padding:10px;
+      border:none;
+      border-radius:10px;
+      background:#ff7043;
+      color:white;
+      cursor:pointer;
+      transition:0.3s;
     }
 
-    button:hover { transform:scale(1.05); }
+    button:hover { background:#e64a19; }
 
     .cart {
-      width:35%; position:fixed; right:0; top:0; height:100%;
-      background:white; padding:20px; box-shadow:-5px 0 15px rgba(0,0,0,0.2);
+      width:35%;
+      position:fixed;
+      right:0;
+      top:0;
+      height:100%;
+      background:white;
+      padding:20px;
+      box-shadow:-5px 0 15px rgba(0,0,0,0.15);
       overflow:auto;
     }
 
-    .badge { color:red; font-size:12px; }
+    .cart h3 { margin-top:0; }
+
+    .cart-item {
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:10px;
+    }
+
+    .total {
+      font-weight:600;
+      margin-top:15px;
+    }
 
   </style>
 </head>
@@ -56,38 +138,37 @@
 <body>
 
 <header>
-  <h1>🍞 Sweet Home Bakers</h1>
+  <h1>🍰 Sweet Home Bakers</h1>
+  <p>Fresh • Aesthetic • Delicious</p>
 </header>
 
 <div class="top-bar">
-  <input type="text" class="search-box" placeholder="Search food..." onkeyup="searchItems(this.value)">
+  <input type="text" class="search-box" placeholder="Search cakes, breads..." onkeyup="searchItems(this.value)">
   <button class="login-btn" onclick="login()">Login</button>
 </div>
 
 <div class="container">
-
   <div class="menu" id="menu"></div>
 
   <div class="cart">
-    <h3>🛒 Cart</h3>
+    <h3>🛒 Your Cart</h3>
     <div id="cartItems"></div>
-    <h4>Total: ₹<span id="total">0</span></h4>
-    <button onclick="checkout()">Checkout</button>
+    <div class="total">Total: ₹<span id="total">0</span></div>
+    <button onclick="checkout()">Order Now</button>
   </div>
-
 </div>
 
 <script>
 const menuItems = [
-  {name:"Bread", price:40, img:"https://source.unsplash.com/400x300/?bread"},
-  {name:"Sourdough", price:120, img:"https://source.unsplash.com/400x300/?sourdough"},
-  {name:"Brown Bread", price:60, img:"https://source.unsplash.com/400x300/?brown-bread"},
-  {name:"Multigrain Bread", price:80, img:"https://source.unsplash.com/400x300/?multigrain-bread"},
-  {name:"Birthday Cake", price:900, img:"https://source.unsplash.com/400x300/?birthday-cake"},
-  {name:"Cup Cakes", price:100, img:"https://source.unsplash.com/400x300/?cupcake"},
-  {name:"Sugar Free Cake", price:1000, img:"https://source.unsplash.com/400x300/?cake"},
-  {name:"Cheese Cake", price:750, img:"https://source.unsplash.com/400x300/?cheesecake", badge:"🔥 Best Seller"},
-  {name:"Croissant", price:120, img:"https://source.unsplash.com/400x300/?croissant"}
+  {name:"Bread", price:40, img:"https://source.unsplash.com/300x200/?bread"},
+  {name:"Sourdough", price:120, img:"https://source.unsplash.com/300x200/?sourdough"},
+  {name:"Brown Bread", price:60, img:"https://source.unsplash.com/300x200/?brown-bread"},
+  {name:"Multigrain Bread", price:80, img:"https://source.unsplash.com/300x200/?multigrain"},
+  {name:"Birthday Cake", price:900, img:"https://source.unsplash.com/300x200/?cake"},
+  {name:"Cup Cakes", price:100, img:"https://source.unsplash.com/300x200/?cupcake"},
+  {name:"Sugar Free Cake", price:1000, img:"https://source.unsplash.com/300x200/?dessert"},
+  {name:"Cheese Cake", price:750, img:"https://source.unsplash.com/300x200/?cheesecake", badge:"🔥 Best Seller"},
+  {name:"Croissant", price:120, img:"https://source.unsplash.com/300x200/?croissant"}
 ];
 
 let cart = [];
@@ -98,13 +179,13 @@ function renderMenu(list){
 
   list.forEach(item=>{
     menuDiv.innerHTML += `
-      <div class="menu-card">
-        <div class="menu-item">
-          <span>${item.name} ${item.badge ? `<span class='badge'>${item.badge}</span>`:''}</span>
-          <span>₹${item.price}</span>
-        </div>
+      <div class="card">
         <img src="${item.img}">
-        <button onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+        <div class="card-body">
+          <div class="title">${item.name} ${item.badge ? `<span class='badge'>${item.badge}</span>`:''}</div>
+          <div class="price">₹${item.price}</div>
+          <button onclick="addToCart('${item.name}', ${item.price})">Add</button>
+        </div>
       </div>
     `;
   });
@@ -128,7 +209,7 @@ function updateCart(){
   cartDiv.innerHTML = "";
 
   cart.forEach(item=>{
-    cartDiv.innerHTML += `<p>${item.name} x${item.qty} - ₹${item.price * item.qty}</p>`;
+    cartDiv.innerHTML += `<div class='cart-item'><span>${item.name} x${item.qty}</span><span>₹${item.price * item.qty}</span></div>`;
     total += item.price * item.qty;
   });
 
@@ -151,7 +232,7 @@ function checkout(){
 
 function login(){
   let name = prompt("Enter your name:");
-  if(name) alert("Welcome " + name + "!");
+  if(name) alert("Welcome " + name + " 👋");
 }
 
 renderMenu(menuItems);
