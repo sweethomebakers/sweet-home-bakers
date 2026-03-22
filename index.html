@@ -6,21 +6,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    body { margin:0; font-family:'Poppins', sans-serif; background: linear-gradient(135deg, #fff8f0, #ffe0b2); }
+    body { margin:0; font-family:'Poppins', sans-serif; background:#e8f5e9; }
 
-    header { text-align:center; padding:20px; }
+    header { text-align:center; padding:20px; background:#a5d6a7; }
 
     .top-bar { display:flex; justify-content:space-between; padding:10px 20px; gap:10px; }
 
-    .search-box { flex:1; padding:12px; border-radius:25px; border:none; outline:none; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+    .search-box { flex:1; padding:12px; border-radius:25px; border:none; outline:none; }
 
-    .login-btn { padding:10px 15px; border:none; border-radius:20px; background:#ff7043; color:white; cursor:pointer; }
+    .login-btn { padding:10px 15px; border:none; border-radius:20px; background:#66bb6a; color:white; cursor:pointer; }
 
     .menu { padding:20px; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; }
 
-    .card { background:white; border-radius:20px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1); transition:0.3s; }
-
-    .card:hover { transform:translateY(-8px) scale(1.02); }
+    .card { background:white; border-radius:20px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1); }
 
     .card img { width:100%; height:150px; object-fit:cover; }
 
@@ -28,42 +26,27 @@
 
     .title { font-weight:600; }
 
-    .price { color:#ff7043; font-weight:600; }
+    .price { color:#388e3c; font-weight:600; }
 
-    button { width:100%; margin-top:10px; padding:10px; border:none; border-radius:10px; background:#ff7043; color:white; cursor:pointer; }
+    .qty-control {
+      display:flex; justify-content:space-between; align-items:center; margin-top:10px;
+    }
+
+    .qty-btn {
+      background:#66bb6a; border:none; color:white; padding:5px 10px; border-radius:5px; cursor:pointer;
+    }
 
     .floating-cart {
-      position:fixed;
-      bottom:20px;
-      right:20px;
-      background:#ff7043;
-      color:white;
-      padding:15px 20px;
-      border-radius:30px;
-      box-shadow:0 5px 15px rgba(0,0,0,0.2);
-      cursor:pointer;
+      position:fixed; bottom:20px; right:20px; background:#388e3c; color:white;
+      padding:15px 20px; border-radius:30px; cursor:pointer;
     }
 
     .cart-popup {
-      position:fixed;
-      bottom:80px;
-      right:20px;
-      width:300px;
-      background:white;
-      border-radius:15px;
-      box-shadow:0 10px 25px rgba(0,0,0,0.2);
-      padding:15px;
-      display:none;
+      position:fixed; bottom:80px; right:20px; width:300px; background:white;
+      border-radius:15px; padding:15px; display:none; box-shadow:0 10px 25px rgba(0,0,0,0.2);
     }
 
-    .cart-item { display:flex; justify-content:space-between; margin-bottom:8px; }
-
-    footer {
-      text-align:center;
-      padding:20px;
-      background:#fff3e0;
-      margin-top:20px;
-    }
+    footer { text-align:center; padding:20px; background:#c8e6c9; }
 
   </style>
 </head>
@@ -72,24 +55,22 @@
 
 <header>
   <h1>🍰 Sweet Home Bakers</h1>
-  <p>Fresh • Aesthetic • Delicious</p>
 </header>
 
 <div class="top-bar">
-  <input type="text" class="search-box" placeholder="Search cakes, breads..." onkeyup="searchItems(this.value)">
+  <input type="text" class="search-box" placeholder="Search..." onkeyup="searchItems(this.value)">
   <button class="login-btn" onclick="login()">Login</button>
 </div>
 
 <div class="menu" id="menu"></div>
 
-<!-- Floating Cart -->
-<div class="floating-cart" onclick="toggleCart()">🛒 View Cart (<span id="count">0</span>)</div>
+<div class="floating-cart" onclick="toggleCart()">🛒 Cart (<span id="count">0</span>)</div>
 
 <div class="cart-popup" id="cartPopup">
   <h3>Your Cart</h3>
   <div id="cartItems"></div>
   <h4>Total: ₹<span id="total">0</span></h4>
-  <button onclick="goToCheckout()">Proceed</button>
+  <button onclick="goToCheckout()">Checkout</button>
 </div>
 
 <footer>
@@ -117,29 +98,43 @@ function renderMenu(list){
   menuDiv.innerHTML = "";
 
   list.forEach(item=>{
+    const cartItem = cart.find(c=>c.name===item.name);
+    const qty = cartItem ? cartItem.qty : 0;
+
     menuDiv.innerHTML += `
       <div class="card">
         <img src="${item.img}">
         <div class="card-body">
           <div class="title">${item.name}</div>
           <div class="price">₹${item.price}</div>
-          <button onclick="addToCart('${item.name}', ${item.price})">Add</button>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, -1)">-</button>
+            <span>${qty}</span>
+            <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, 1)">+</button>
+          </div>
         </div>
       </div>
     `;
   });
 }
 
+function changeQty(name, price, delta){
+  let item = cart.find(i=>i.name===name);
+
+  if(!item && delta>0){
+    cart.push({name, price, qty:1});
+  } else if(item){
+    item.qty += delta;
+    if(item.qty<=0){ cart = cart.filter(i=>i.name!==name); }
+  }
+
+  updateCart();
+  renderMenu(menuItems);
+}
+
 function searchItems(query){
   const filtered = menuItems.filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
   renderMenu(filtered);
-}
-
-function addToCart(name, price){
-  const existing = cart.find(item => item.name === name);
-  if(existing){ existing.qty++; }
-  else { cart.push({name, price, qty:1}); }
-  updateCart();
 }
 
 function updateCart(){
@@ -149,7 +144,7 @@ function updateCart(){
   cartDiv.innerHTML = "";
 
   cart.forEach(item=>{
-    cartDiv.innerHTML += `<div class='cart-item'><span>${item.name} x${item.qty}</span><span>₹${item.price * item.qty}</span></div>`;
+    cartDiv.innerHTML += `<p>${item.name} x${item.qty} - ₹${item.price * item.qty}</p>`;
     total += item.price * item.qty;
     count += item.qty;
   });
@@ -164,12 +159,13 @@ function toggleCart(){
 }
 
 function goToCheckout(){
-  alert("Redirecting to payment page...");
+  localStorage.setItem('cart', JSON.stringify(cart));
+  window.location.href = 'checkout.html';
 }
 
 function login(){
   let name = prompt("Enter your name:");
-  if(name) alert("Welcome " + name + " 👋");
+  if(name) alert("Welcome " + name);
 }
 
 renderMenu(menuItems);
