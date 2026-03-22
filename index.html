@@ -3,147 +3,194 @@
 <head>
   <title>Sweet Home Bakers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    body { margin:0; font-family: 'Georgia', serif; background: linear-gradient(to right, #dcedc8, #c5e1a5); color:#2e7d32; }
-    header { text-align:center; padding:30px; }
-    h1 { font-size:42px; letter-spacing:1px; }
+    body {
+      margin:0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #e8f5e9, #c8e6c9);
+    }
+
+    header {
+      text-align:center;
+      padding:30px;
+    }
+
+    h1 { font-size:40px; }
+
     .container { padding:20px; }
 
-    /* Menu card style */
     .menu-card {
-      background:#ffffff;
-      border-radius:15px;
+      background:white;
+      border-radius:20px;
       padding:20px;
-      max-width:600px;
+      max-width:700px;
       margin:20px auto;
-      box-shadow:0 5px 15px rgba(0,0,0,0.2);
+      box-shadow:0 10px 25px rgba(0,0,0,0.15);
+      transition:0.3s;
+    }
+
+    .menu-card:hover {
+      transform:translateY(-8px);
     }
 
     .menu-item {
       display:flex;
       justify-content:space-between;
+      padding:12px 0;
       border-bottom:1px dashed #ccc;
-      padding:10px 0;
-      font-size:18px;
     }
 
-    .menu-item:last-child { border-bottom:none; }
+    .menu-item:last-child { border:none; }
+
+    img {
+      width:100%;
+      border-radius:12px;
+      margin-top:10px;
+    }
 
     button {
       width:100%;
-      padding:10px;
+      padding:12px;
       margin-top:10px;
       border:none;
-      border-radius:8px;
-      background:#8bc34a;
+      border-radius:10px;
+      background:#43a047;
       color:white;
+      font-size:16px;
       cursor:pointer;
+      transition:0.3s;
     }
 
-    .popup { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; }
-    .popup-box { background:white; padding:20px; border-radius:15px; text-align:center; }
+    button:hover {
+      background:#2e7d32;
+      transform:scale(1.05);
+    }
 
-    .cart { background:white; padding:15px; border-radius:10px; margin:20px auto; max-width:600px; }
+    .cart {
+      background:white;
+      padding:20px;
+      border-radius:15px;
+      max-width:700px;
+      margin:20px auto;
+    }
 
-    iframe { border-radius:10px; height:200px; width:100%; }
+    iframe { width:100%; height:200px; border-radius:10px; }
 
-    .whatsapp { position:fixed; bottom:20px; right:20px; background:#25D366; color:white; padding:15px; border-radius:50%; font-size:20px; cursor:pointer; }
+    .whatsapp {
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:#25D366;
+      color:white;
+      padding:15px;
+      border-radius:50%;
+      cursor:pointer;
+      font-size:22px;
+    }
 
-    .live { position:fixed; bottom:10px; left:10px; background:black; color:white; padding:10px; border-radius:10px; }
+    .badge {
+      color:red;
+      font-size:12px;
+    }
   </style>
 </head>
 
 <body>
 
-<div id="popup" class="popup">
-  <div class="popup-box">
-    <h2>Welcome to Sweet Home Bakers 🎂</h2>
-    <p>Delicious Devouring bakery experience</p>
-    <button onclick="closePopup()">Start Ordering</button>
-  </div>
-</div>
-
 <header>
-  <h1>Sweet Home Bakers</h1>
-  <p>Bangalore | Home Delivery / Pickup</p>
+  <h1>🍞 Sweet Home Bakers</h1>
+  <p>Freshly baked happiness | Home Delivery</p>
 </header>
 
 <div class="container">
 
   <div class="menu-card">
-    <h2 style="text-align:center;">🍰 Bakery Menu</h2>
+    <h2>Menu</h2>
 
-    <div class="menu-item">
-      <span>Cheesecake</span>
-      <span>₹750</span>
-    </div>
-
-    <div class="menu-item">
-      <span>Puff</span>
-      <span>₹50</span>
-    </div>
-
-    <div class="menu-item">
-      <span>Cupcake</span>
-      <span>₹80</span>
-    </div>
-
-    <button onclick="addToCart('Cheesecake',750)">Add Cheesecake</button>
-    <button onclick="addToCart('Puff',50)">Add Puff</button>
-    <button onclick="addToCart('Cupcake',80)">Add Cupcake</button>
+    <div id="menu"></div>
   </div>
 
   <div class="cart">
     <h3>🛒 Cart</h3>
     <div id="cartItems"></div>
-    <p>Total: ₹<span id="total">0</span></p>
-    <button onclick="checkout()">Checkout</button>
+    <h4>Total: ₹<span id="total">0</span></h4>
+    <button onclick="checkout()">Checkout via WhatsApp</button>
   </div>
 
   <h2 style="text-align:center;">📍 Location</h2>
-  <iframe src="https://www.google.com/maps?q=Bangalore&output=embed"></iframe>
-
-  <h2 style="text-align:center;">📞 Contact</h2>
-  <p style="text-align:center;">WhatsApp: +91 88888 88888</p>
-  <p style="text-align:center;">Instagram: @sweethomebakerss</p>
+  <iframe src="https://www.google.com/maps?q=Bangalore%20Bakery&output=embed"></iframe>
 
 </div>
 
-<div id="live" class="live"></div>
-<div class="whatsapp" onclick="openWhatsApp()">💬</div>
+<div class="whatsapp" onclick="checkout()">💬</div>
 
 <script>
-let cart=[];
+const menuItems = [
+  {name:"Bread", price:40},
+  {name:"Sourdough", price:120},
+  {name:"Brown Bread", price:60},
+  {name:"Multigrain Bread", price:80},
+  {name:"Birthday Cake", price:900},
+  {name:"Cup Cakes", price:100},
+  {name:"Sugar Free Cake", price:1000},
+  {name:"Cheese Cake", price:750, badge:"🔥 Best Seller"},
+  {name:"Croissant", price:120}
+];
 
-function addToCart(name,price){
-  cart.push({name,price});
+let cart = [];
+
+function renderMenu(){
+  const menuDiv = document.getElementById('menu');
+  menuItems.forEach(item=>{
+    menuDiv.innerHTML += `
+      <div class="menu-item">
+        <span>${item.name} ${item.badge ? `<span class='badge'>${item.badge}</span>`:''}</span>
+        <span>₹${item.price}</span>
+      </div>
+      <button onclick="addToCart('${item.name}', ${item.price})">Add ${item.name}</button>
+    `;
+  });
+}
+
+function addToCart(name, price){
+  const existing = cart.find(item => item.name === name);
+  if(existing){
+    existing.qty++;
+  } else {
+    cart.push({name, price, qty:1});
+  }
   updateCart();
 }
 
 function updateCart(){
-  let cartDiv=document.getElementById('cartItems');
-  let total=0;
-  cartDiv.innerHTML="";
+  let cartDiv = document.getElementById('cartItems');
+  let total = 0;
+  cartDiv.innerHTML = "";
+
   cart.forEach(item=>{
-    cartDiv.innerHTML+=`<p>${item.name} - ₹${item.price}</p>`;
-    total+=item.price;
+    cartDiv.innerHTML += `<p>${item.name} x${item.qty} - ₹${item.price * item.qty}</p>`;
+    total += item.price * item.qty;
   });
-  document.getElementById('total').innerText=total;
+
+  document.getElementById('total').innerText = total;
 }
 
-function checkout(){ alert("Order placed! We will contact you."); }
+function checkout(){
+  let message = "Order Details:%0A";
+  let total = 0;
 
-function openWhatsApp(){
-  window.open("https://wa.me/918888888888?text=I want to order from Sweet Home Bakers","_blank");
+  cart.forEach(item=>{
+    message += `${item.name} x${item.qty} = ₹${item.price * item.qty}%0A`;
+    total += item.price * item.qty;
+  });
+
+  message += `Total: ₹${total}`;
+
+  window.open(`https://wa.me/918888888888?text=${message}`, '_blank');
 }
 
-function closePopup(){ document.getElementById('popup').style.display='none'; }
-
-setInterval(()=>{
-  const items=["Cheesecake","Puff","Cupcake"];
-  const random=items[Math.floor(Math.random()*items.length)];
-  document.getElementById('live').innerText="Someone ordered "+random+" 🍰";
-},3000);
+renderMenu();
 </script>
 
 </body>
