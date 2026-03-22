@@ -4,40 +4,96 @@
   <title>Sweet Home Bakers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial; margin: 0; background: #fff0f5; }
-    header { background: #ffc0cb; padding: 20px; text-align: center; }
-    h1 { margin: 0; }
-    .container { padding: 20px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-    .card { background: white; border-radius: 10px; padding: 10px; text-align: center; }
-    img { width: 100%; border-radius: 10px; }
-    button { padding: 10px; margin-top: 5px; width: 100%; border: none; border-radius: 5px; cursor: pointer; }
-    .upi { background: green; color: white; }
+    body { margin:0; font-family: Arial; background: linear-gradient(to right, #ffe4e1, #fce4ec); }
+    header { text-align:center; padding:30px; }
+    h1 { font-size:40px; }
+    .container { padding:20px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px; }
+    .card { background:white; border-radius:15px; padding:10px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+    img { width:100%; height:150px; object-fit:cover; border-radius:10px; }
+    button { width:100%; padding:10px; margin-top:5px; border:none; border-radius:8px; cursor:pointer; }
+    .upi { background:green; color:white; }
+    .popup {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center;
+    }
+    .popup-box { background:white; padding:20px; border-radius:15px; text-align:center; }
+    .live { position:fixed; bottom:10px; left:10px; background:black; color:white; padding:10px; border-radius:10px; }
+    .dark { background:#111; color:white; }
   </style>
 </head>
-<body>
+
+<body id="body">
+
+<div id="popup" class="popup">
+  <div class="popup-box">
+    <h2>Welcome to Sweet Home Bakers 🎂</h2>
+    <p>Fresh cakes & breads delivered to your home</p>
+    <button onclick="closePopup()">Start Ordering</button>
+  </div>
+</div>
 
 <header>
   <h1>Sweet Home Bakers</h1>
   <p>Bangalore | Home Delivery / Pickup</p>
+  <button onclick="toggleDark()">Toggle Dark Mode</button>
+  <p style="color:red;">🔥 Only few items left today!</p>
 </header>
 
 <div class="container">
   <h2>Menu</h2>
   <div class="grid">
-    <div class="card"><img src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec"><h3>Sourdough</h3><p>₹250</p><button>Add to Cart</button><button class="upi">Pay via UPI</button></div>
-    <div class="card"><img src="https://images.unsplash.com/photo-1589367920969-ab8e050bbb04"><h3>Brown Bread</h3><p>₹120</p><button>Add to Cart</button><button class="upi">Pay via UPI</button></div>
-    <div class="card"><img src="https://images.unsplash.com/photo-1599785209707-28d3a7f5f2a9"><h3>Birthday Cake</h3><p>₹600</p><button>Add to Cart</button><button class="upi">Pay via UPI</button></div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1605478906955-69c9c6fbd0c3">
+      <h3>Cheesecake</h3>
+      <p>₹750</p>
+      <p style="color:red;">⚠️ Only 2 left!</p>
+      <button>Add to Cart</button>
+      <button class="upi">Pay via UPI</button>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1604908176997-43198f4aa6b6">
+      <h3>Puff</h3>
+      <p>₹50</p>
+      <button>Add to Cart</button>
+      <button class="upi">Pay via UPI</button>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1589307004396-7c1d6b5c9b41">
+      <h3>Cupcake</h3>
+      <p>₹80</p>
+      <button>Add to Cart</button>
+      <button class="upi">Pay via UPI</button>
+    </div>
+
   </div>
 
-  <h2>Contact</h2>
+  <h2>📍 Location</h2>
+  <iframe src="https://www.google.com/maps?q=Bangalore&output=embed" width="100%" height="250"></iframe>
+
+  <h2>🎉 Offers</h2>
+  <p>Use code <b>SWEET10</b> for 10% OFF</p>
+
+  <h2>📞 Contact</h2>
   <p>WhatsApp: +91 99999 99999</p>
   <p>Instagram: @sweethomebakers</p>
-
-  <h2>Offers</h2>
-  <p>Use code SWEET10 for 10% off</p>
-
 </div>
+
+<div id="live" class="live"></div>
+
+<script>
+function closePopup(){ document.getElementById('popup').style.display='none'; }
+function toggleDark(){ document.getElementById('body').classList.toggle('dark'); }
+
+const items = ["Cheesecake","Puff","Cupcake"];
+setInterval(()=>{
+  const random = items[Math.floor(Math.random()*items.length)];
+  document.getElementById('live').innerText = "Someone just ordered " + random + " 🍰";
+},3000);
+</script>
 
 </body>
 </html>
