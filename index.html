@@ -4,37 +4,21 @@
   <title>Sweet Home Bakers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { margin:0; font-family: Arial; background: linear-gradient(to right, #000000, #1a1a1a); color:#f5d76e; }
+    body { margin:0; font-family: Arial; background: linear-gradient(to right, #fff8e1, #ffe0b2); color:#5d4037; }
     header { text-align:center; padding:30px; }
-    h1 { font-size:42px; letter-spacing:2px; }
+    h1 { font-size:40px; }
     .container { padding:20px; }
     .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
-    .card { background:#111; border-radius:15px; padding:10px; text-align:center; box-shadow:0 4px 15px rgba(255,215,0,0.2); }
+    .card { background:white; border-radius:15px; padding:10px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
     img { width:100%; height:150px; object-fit:cover; border-radius:10px; }
     button { width:100%; padding:10px; margin-top:5px; border:none; border-radius:8px; cursor:pointer; }
-    .upi { background:#f5d76e; color:black; font-weight:bold; }
-    .gold { color:#f5d76e; }
-    .popup { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; }
-    .popup-box { background:#111; padding:20px; border-radius:15px; text-align:center; color:#f5d76e; }
-    .live { position:fixed; bottom:10px; left:10px; background:black; color:#f5d76e; padding:10px; border-radius:10px; }
+    .upi { background:#ff9800; color:white; font-weight:bold; }
+    .popup { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; }
+    .popup-box { background:white; padding:20px; border-radius:15px; text-align:center; }
+    .live { position:fixed; bottom:10px; left:10px; background:black; color:white; padding:10px; border-radius:10px; }
     iframe { border-radius:10px; height:200px; }
-
-    /* WhatsApp floating */
-    .whatsapp {
-      position:fixed;
-      bottom:20px;
-      right:20px;
-      background:#25D366;
-      color:white;
-      padding:15px;
-      border-radius:50%;
-      font-size:20px;
-      cursor:pointer;
-      box-shadow:0 4px 10px rgba(0,0,0,0.3);
-    }
-
-    /* Cart */
-    .cart { background:#111; padding:15px; border-radius:10px; margin-top:20px; }
+    .whatsapp { position:fixed; bottom:20px; right:20px; background:#25D366; color:white; padding:15px; border-radius:50%; font-size:20px; cursor:pointer; }
+    .cart { background:white; padding:15px; border-radius:10px; margin-top:20px; }
   </style>
 </head>
 
@@ -43,19 +27,19 @@
 <div id="popup" class="popup">
   <div class="popup-box">
     <h2>Welcome to Sweet Home Bakers 🎂</h2>
-    <p>Luxury cakes & bakery experience</p>
+    <p>Delicious Devouring bakery experience</p>
     <button onclick="closePopup()">Start Ordering</button>
   </div>
 </div>
 
 <header>
-  <h1 class="gold">Sweet Home Bakers</h1>
-  <p>Bangalore | Premium Home Delivery</p>
-  <p style="color:red;">🔥 Limited luxury items available</p>
+  <h1>Sweet Home Bakers</h1>
+  <p>Bangalore | Home Delivery / Pickup</p>
+  <p style="color:red;">🔥 Fresh & delicious items available</p>
 </header>
 
 <div class="container">
-  <h2 class="gold">Our Premium Menu</h2>
+  <h2>Our Menu</h2>
   <div class="grid" id="menu"></div>
 
   <div class="cart">
@@ -67,10 +51,13 @@
 
   <h2>📍 Location</h2>
   <iframe src="https://www.google.com/maps?q=Bangalore&output=embed" width="100%"></iframe>
+
+  <h2>📞 Contact</h2>
+  <p>WhatsApp: +91 88888 88888</p>
+  <p>Instagram: @sweethomebakerss</p>
 </div>
 
 <div id="live" class="live"></div>
-
 <div class="whatsapp" onclick="openWhatsApp()">💬</div>
 
 <script>
@@ -96,10 +83,7 @@ function loadMenu(){
   });
 }
 
-function addToCart(item){
-  cart.push(item);
-  updateCart();
-}
+function addToCart(item){ cart.push(item); updateCart(); }
 
 function updateCart(){
   const cartDiv = document.getElementById("cartItems");
@@ -113,12 +97,10 @@ function updateCart(){
   totalEl.innerText=total;
 }
 
-function checkout(){
-  alert("Order placed! We will contact you on WhatsApp.");
-}
+function checkout(){ alert("Order placed! We will contact you."); }
 
 function openWhatsApp(){
-  window.open("https://wa.me/919999999999?text=I want to order from Sweet Home Bakers","_blank");
+  window.open("https://wa.me/918888888888?text=I want to order from Sweet Home Bakers","_blank");
 }
 
 function closePopup(){ document.getElementById('popup').style.display='none'; }
