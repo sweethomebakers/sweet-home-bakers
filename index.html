@@ -6,130 +6,63 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      margin:0;
-      font-family:'Poppins', sans-serif;
-      background: linear-gradient(135deg, #fff8f0, #ffe0b2);
+    body { margin:0; font-family:'Poppins', sans-serif; background: linear-gradient(135deg, #fff8f0, #ffe0b2); }
+
+    header { text-align:center; padding:20px; }
+
+    .top-bar { display:flex; justify-content:space-between; padding:10px 20px; gap:10px; }
+
+    .search-box { flex:1; padding:12px; border-radius:25px; border:none; outline:none; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+
+    .login-btn { padding:10px 15px; border:none; border-radius:20px; background:#ff7043; color:white; cursor:pointer; }
+
+    .menu { padding:20px; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; }
+
+    .card { background:white; border-radius:20px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1); transition:0.3s; }
+
+    .card:hover { transform:translateY(-8px) scale(1.02); }
+
+    .card img { width:100%; height:150px; object-fit:cover; }
+
+    .card-body { padding:15px; }
+
+    .title { font-weight:600; }
+
+    .price { color:#ff7043; font-weight:600; }
+
+    button { width:100%; margin-top:10px; padding:10px; border:none; border-radius:10px; background:#ff7043; color:white; cursor:pointer; }
+
+    .floating-cart {
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:#ff7043;
+      color:white;
+      padding:15px 20px;
+      border-radius:30px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.2);
+      cursor:pointer;
     }
 
-    header {
+    .cart-popup {
+      position:fixed;
+      bottom:80px;
+      right:20px;
+      width:300px;
+      background:white;
+      border-radius:15px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.2);
+      padding:15px;
+      display:none;
+    }
+
+    .cart-item { display:flex; justify-content:space-between; margin-bottom:8px; }
+
+    footer {
       text-align:center;
       padding:20px;
-    }
-
-    h1 { font-weight:600; }
-
-    .top-bar {
-      display:flex;
-      justify-content:space-between;
-      padding:10px 20px;
-      gap:10px;
-    }
-
-    .search-box {
-      flex:1;
-      padding:12px;
-      border-radius:25px;
-      border:none;
-      outline:none;
-      box-shadow:0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .login-btn {
-      padding:10px 15px;
-      border:none;
-      border-radius:20px;
-      background:#ff7043;
-      color:white;
-      cursor:pointer;
-    }
-
-    .container {
-      display:flex;
-    }
-
-    .menu {
-      width:65%;
-      padding:20px;
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-      gap:20px;
-    }
-
-    .card {
-      background:white;
-      border-radius:20px;
-      overflow:hidden;
-      box-shadow:0 8px 20px rgba(0,0,0,0.1);
-      transition:0.3s;
-    }
-
-    .card:hover {
-      transform:translateY(-8px) scale(1.02);
-    }
-
-    .card img {
-      width:100%;
-      height:150px;
-      object-fit:cover;
-    }
-
-    .card-body {
-      padding:15px;
-    }
-
-    .title {
-      font-weight:600;
-      margin-bottom:5px;
-    }
-
-    .price {
-      color:#ff7043;
-      font-weight:600;
-    }
-
-    .badge {
-      font-size:11px;
-      color:red;
-    }
-
-    button {
-      width:100%;
-      margin-top:10px;
-      padding:10px;
-      border:none;
-      border-radius:10px;
-      background:#ff7043;
-      color:white;
-      cursor:pointer;
-      transition:0.3s;
-    }
-
-    button:hover { background:#e64a19; }
-
-    .cart {
-      width:35%;
-      position:fixed;
-      right:0;
-      top:0;
-      height:100%;
-      background:white;
-      padding:20px;
-      box-shadow:-5px 0 15px rgba(0,0,0,0.15);
-      overflow:auto;
-    }
-
-    .cart h3 { margin-top:0; }
-
-    .cart-item {
-      display:flex;
-      justify-content:space-between;
-      margin-bottom:10px;
-    }
-
-    .total {
-      font-weight:600;
-      margin-top:15px;
+      background:#fff3e0;
+      margin-top:20px;
     }
 
   </style>
@@ -147,16 +80,22 @@
   <button class="login-btn" onclick="login()">Login</button>
 </div>
 
-<div class="container">
-  <div class="menu" id="menu"></div>
+<div class="menu" id="menu"></div>
 
-  <div class="cart">
-    <h3>🛒 Your Cart</h3>
-    <div id="cartItems"></div>
-    <div class="total">Total: ₹<span id="total">0</span></div>
-    <button onclick="checkout()">Order Now</button>
-  </div>
+<!-- Floating Cart -->
+<div class="floating-cart" onclick="toggleCart()">🛒 View Cart (<span id="count">0</span>)</div>
+
+<div class="cart-popup" id="cartPopup">
+  <h3>Your Cart</h3>
+  <div id="cartItems"></div>
+  <h4>Total: ₹<span id="total">0</span></h4>
+  <button onclick="goToCheckout()">Proceed</button>
 </div>
+
+<footer>
+  <p>📞 +91 99999 99999</p>
+  <p>📸 Instagram: @sweethomebakers</p>
+</footer>
 
 <script>
 const menuItems = [
@@ -167,7 +106,7 @@ const menuItems = [
   {name:"Birthday Cake", price:900, img:"https://source.unsplash.com/300x200/?cake"},
   {name:"Cup Cakes", price:100, img:"https://source.unsplash.com/300x200/?cupcake"},
   {name:"Sugar Free Cake", price:1000, img:"https://source.unsplash.com/300x200/?dessert"},
-  {name:"Cheese Cake", price:750, img:"https://source.unsplash.com/300x200/?cheesecake", badge:"🔥 Best Seller"},
+  {name:"Cheese Cake", price:750, img:"https://source.unsplash.com/300x200/?cheesecake"},
   {name:"Croissant", price:120, img:"https://source.unsplash.com/300x200/?croissant"}
 ];
 
@@ -182,7 +121,7 @@ function renderMenu(list){
       <div class="card">
         <img src="${item.img}">
         <div class="card-body">
-          <div class="title">${item.name} ${item.badge ? `<span class='badge'>${item.badge}</span>`:''}</div>
+          <div class="title">${item.name}</div>
           <div class="price">₹${item.price}</div>
           <button onclick="addToCart('${item.name}', ${item.price})">Add</button>
         </div>
@@ -206,28 +145,26 @@ function addToCart(name, price){
 function updateCart(){
   let cartDiv = document.getElementById('cartItems');
   let total = 0;
+  let count = 0;
   cartDiv.innerHTML = "";
 
   cart.forEach(item=>{
     cartDiv.innerHTML += `<div class='cart-item'><span>${item.name} x${item.qty}</span><span>₹${item.price * item.qty}</span></div>`;
     total += item.price * item.qty;
+    count += item.qty;
   });
 
   document.getElementById('total').innerText = total;
+  document.getElementById('count').innerText = count;
 }
 
-function checkout(){
-  let message = "Order Details:%0A";
-  let total = 0;
+function toggleCart(){
+  const popup = document.getElementById('cartPopup');
+  popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+}
 
-  cart.forEach(item=>{
-    message += `${item.name} x${item.qty} = ₹${item.price * item.qty}%0A`;
-    total += item.price * item.qty;
-  });
-
-  message += `Total: ₹${total}`;
-
-  window.open(`https://wa.me/918888888888?text=${message}`, '_blank');
+function goToCheckout(){
+  alert("Redirecting to payment page...");
 }
 
 function login(){
