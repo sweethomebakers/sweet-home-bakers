@@ -7,72 +7,40 @@
 
   <style>
     body { margin:0; font-family:'Poppins', sans-serif; background:#e8f5e9; }
-
     header { text-align:center; padding:20px; background:#a5d6a7; }
-
-header h1 { font-family:'Playfair Display', serif; font-size:36px; letter-spacing:1px; }
+    header h1 { font-family:'Playfair Display', serif; font-size:36px; }
 
     .top-bar { display:flex; justify-content:space-between; padding:10px 20px; gap:10px; }
-
     .search-box { flex:1; padding:12px; border-radius:25px; border:none; outline:none; }
-
     .login-btn { padding:10px 15px; border:none; border-radius:20px; background:#66bb6a; color:white; cursor:pointer; }
 
     .menu { padding:20px; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; }
 
-    .card { background:white; border-radius:20px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1); position:relative; }
-
+    .card { background:white; border-radius:20px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.1); }
     .card img { width:100%; height:150px; object-fit:cover; }
-
     .card-body { padding:15px; }
-
     .title { font-weight:600; }
-
     .price { color:#388e3c; font-weight:600; }
 
     .qty-control { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
-
     .qty-btn { background:#66bb6a; border:none; color:white; padding:5px 10px; border-radius:5px; cursor:pointer; }
 
-    .floating-cart {
-      position:fixed; bottom:20px; right:20px; background:#388e3c; color:white;
-      padding:15px 20px; border-radius:30px; cursor:pointer;
-    }
+    .floating-cart { position:fixed; bottom:20px; right:20px; background:#388e3c; color:white; padding:15px 20px; border-radius:30px; cursor:pointer; }
 
-    .cart-popup {
-      position:fixed; bottom:80px; right:20px; width:300px; background:white;
-      border-radius:15px; padding:15px; display:none; box-shadow:0 10px 25px rgba(0,0,0,0.2);
-    }
+    .cart-popup { position:fixed; bottom:80px; right:20px; width:300px; background:white; border-radius:15px; padding:15px; display:none; box-shadow:0 10px 25px rgba(0,0,0,0.2); }
 
-    .fly-img {
-      position:fixed;
-      width:50px;
-      height:50px;
-      border-radius:50%;
-      pointer-events:none;
-      z-index:9999;
-      transition:all 0.8s ease-in-out;
-    }
+    .fly-img { position:fixed; width:50px; height:50px; border-radius:50%; pointer-events:none; z-index:9999; transition:all 0.8s ease-in-out; }
+
+    .banner { background:#66bb6a; color:white; text-align:center; padding:10px; font-weight:600; }
 
     footer { text-align:center; padding:20px; background:#c8e6c9; }
-
   </style>
 </head>
 
 <body>
 
-<!-- Flash Sale Popup -->
-<div id="flashSale" style="position:fixed;bottom:20px;left:20px;background:#ff7043;color:white;padding:15px 20px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.3);z-index:9999;display:none;">
-🔥 Flash Sale! 20% OFF on Cakes Today!
-</div>
-
-<!-- Welcome Popup -->
-<div id="popup" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;">
-  <div style="background:white;padding:25px;border-radius:20px;text-align:center;max-width:300px;">
-    <h2>Welcome to Sweet Home Bakers 🎂</h2>
-    <p>Delicious Devouring from Mumbai</p>
-    <button onclick="closePopup()" style="padding:10px 20px;border:none;border-radius:10px;background:#66bb6a;color:white;cursor:pointer;">Start Ordering</button>
-  </div>
+<div class="banner">
+  🎉 Use SWEET10 (10% OFF) | BAKE20 (20% OFF above ₹999) | ⏳ Ends in <span id="timer">05:00</span>
 </div>
 
 <header>
@@ -97,10 +65,10 @@ header h1 { font-family:'Playfair Display', serif; font-size:36px; letter-spacin
   <button onclick="goToCheckout()">Checkout</button>
 </div>
 
-<!-- Discount Banner -->
-<div style="background:#66bb6a;color:white;text-align:center;padding:15px;font-weight:600;">
-  🎉 Use Code <b>SWEET10</b> for 10% OFF | <b>BAKE20</b> for 20% OFF on orders above ₹999
-  ⏳ Offer ends in <span id="timer">05:00</span>
+<!-- Reviews -->
+<div style="padding:30px;text-align:center;">
+  <h2>⭐ Customer Reviews</h2>
+  <div id="reviewBox" style="margin-top:20px;font-size:18px;">Amazing cakes! 😍</div>
 </div>
 
 <footer>
@@ -108,28 +76,17 @@ header h1 { font-family:'Playfair Display', serif; font-size:36px; letter-spacin
   <p>📸 Instagram: @sweethomebakers</p>
 </footer>
 
-<!-- Review Slider -->
-<div style="padding:30px;text-align:center;">
-  <h2>⭐ Customer Reviews</h2>
-  <div id="reviewBox" style="margin-top:20px;font-size:18px;font-style:italic;">
-    Amazing cakes! Loved the cheesecake 😍
-  </div>
-</div>
-
 <script>
 const menuItems = [
-  {name:"Puff", price:50, img:"https://images.unsplash.com/photo-1604908176997-4311cbb91f9b"},
-  {name:"Cutlet", price:70, img:"https://images.unsplash.com/photo-1604908554168-9f3c0c0b0e2a"},
-  {name:"Ragi Cake", price:120, img:"https://images.unsplash.com/photo-1578985545062-69928b1d9587"},
   {name:"Bread", price:40, img:"https://images.unsplash.com/photo-1608198093002-ad4e005484ec"},
-  
   {name:"Brown Bread", price:60, img:"https://images.unsplash.com/photo-1509440159596-0249088772ff"},
   {name:"Multigrain Bread", price:80, img:"https://images.unsplash.com/photo-1512058564366-c9e3e046c79a"},
   {name:"Birthday Cake", price:900, img:"https://images.unsplash.com/photo-1599785209707-28e1e3b6f7a9"},
   {name:"Cup Cakes", price:100, img:"https://images.unsplash.com/photo-1589308078054-832f0ef2c66f"},
-  
   {name:"Cheese Cake", price:750, img:"https://images.unsplash.com/photo-1565958011703-44f9829ba187"},
-  
+  {name:"Puff", price:50, img:"https://images.unsplash.com/photo-1604908176997-4311cbb91f9b"},
+  {name:"Cutlet", price:70, img:"https://images.unsplash.com/photo-1604908554168-9f3c0c0b0e2a"},
+  {name:"Ragi Cake", price:120, img:"https://images.unsplash.com/photo-1578985545062-69928b1d9587"}
 ];
 
 let cart = [];
@@ -159,6 +116,21 @@ function renderMenu(list){
   });
 }
 
+function changeQty(name, price, delta, btn){
+  let item = cart.find(i=>i.name===name);
+
+  if(!item && delta>0){ cart.push({name, price, qty:1}); }
+  else if(item){ item.qty += delta; if(item.qty<=0){ cart = cart.filter(i=>i.name!==name); } }
+
+  if(delta>0){
+    const product = menuItems.find(i=>i.name===name);
+    animateToCart(product.img, btn);
+  }
+
+  updateCart();
+  renderMenu(menuItems);
+}
+
 function animateToCart(imgSrc, btn){
   const img = document.createElement('img');
   img.src = imgSrc;
@@ -170,77 +142,20 @@ function animateToCart(imgSrc, btn){
 
   document.body.appendChild(img);
 
-  const cart = document.getElementById('cartIcon').getBoundingClientRect();
+  const cartRect = document.getElementById('cartIcon').getBoundingClientRect();
 
   setTimeout(()=>{
-    img.style.left = cart.left + 'px';
-    img.style.top = cart.top + 'px';
+    img.style.left = cartRect.left + 'px';
+    img.style.top = cartRect.top + 'px';
     img.style.opacity = 0;
   },10);
 
   setTimeout(()=> img.remove(), 800);
 }
 
-function changeQty(name, price, delta, btn){
-  let item = cart.find(i=>i.name===name);
-
-  if(!item && delta>0){
-    cart.push({name, price, qty:1});
-  } else if(item){
-    item.qty += delta;
-    if(item.qty<=0){ cart = cart.filter(i=>i.name!==name); }
-  }
-
-  if(delta>0){
-    const product = menuItems.find(i=>i.name===name);
-    animateToCart(product.img, btn);
-  }
-
-  updateCart();
-  renderMenu(menuItems);
-
-// Review Slider
-const reviews = [
-  "Amazing cakes! Loved the cheesecake 😍",
-  "Best bakery in Mumbai! Fresh and tasty 🥐",
-  "Beautiful presentation and great taste 🎂",
-  "Affordable and delicious, highly recommend! ⭐"
-];
-
-let reviewIndex = 0;
-setInterval(()=>{
-  reviewIndex = (reviewIndex + 1) % reviews.length;
-  const box = document.getElementById('reviewBox');
-  if(box){ box.innerText = reviews[reviewIndex]; }
-},3000);
-
-// Flash popup logic
-setTimeout(()=>{
-  document.getElementById('flashSale').style.display='block';
-  setTimeout(()=>{
-    document.getElementById('flashSale').style.display='none';
-  },4000);
-},3000);
-
-// Countdown Timer
-let time = 300;
-setInterval(()=>{
-  let minutes = Math.floor(time/60);
-  let seconds = time % 60;
-  document.getElementById('timer').innerText = `${minutes}:${seconds<10?'0':''}${seconds}`;
-  if(time>0) time--;
-},1000);
-}
-
-function searchItems(query){
-  const filtered = menuItems.filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
-  renderMenu(filtered);
-}
-
 function updateCart(){
   let cartDiv = document.getElementById('cartItems');
-  let total = 0;
-  let count = 0;
+  let total = 0, count = 0;
   cartDiv.innerHTML = "";
 
   cart.forEach(item=>{
@@ -268,11 +183,33 @@ function login(){
   if(name) alert("Welcome " + name);
 }
 
-function closePopup(){
-  document.getElementById('popup').style.display='none';
-}
+// FIXED REVIEW SLIDER + TIMER
+window.addEventListener('DOMContentLoaded', ()=>{
+  renderMenu(menuItems);
 
-renderMenu(menuItems);
+  const reviews = [
+    "Amazing cakes! 😍",
+    "Best bakery in Mumbai!",
+    "Loved the cupcakes 🎂",
+    "Affordable & tasty ⭐"
+  ];
+
+  let index = 0;
+  setInterval(()=>{
+    index = (index + 1) % reviews.length;
+    document.getElementById('reviewBox').innerText = reviews[index];
+  },3000);
+
+  let time = 300;
+  setInterval(()=>{
+    if(time >= 0){
+      let m = Math.floor(time/60);
+      let s = time % 60;
+      document.getElementById('timer').innerText = `${m}:${s<10?'0':''}${s}`;
+      time--;
+    }
+  },1000);
+});
 </script>
 
 </body>
