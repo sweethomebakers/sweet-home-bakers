@@ -163,7 +163,7 @@ function renderMenu(list){
 
     menuDiv.innerHTML += `
       <div class="card">
-        <img src="${item.img}">
+        <img src="${item.img}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
         <div class="card-body">
           <div class="title">${item.name}</div>
           <div class="price">₹${item.price}</div>
