@@ -34,6 +34,21 @@
     .banner { background:#66bb6a; color:white; text-align:center; padding:10px; font-weight:600; }
 
     footer { text-align:center; padding:20px; background:#c8e6c9; }
+
+/* Sold Out UI */
+.img-wrap{ position:relative; }
+.sold-badge{
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:#e53935;
+  color:#fff;
+  padding:4px 8px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:700;
+  z-index:2;
+}
   </style>
 </head>
 
@@ -164,14 +179,17 @@ function renderMenu(list){
 
     menuDiv.innerHTML += `
       <div class="card">
-        <img src="${item.img}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+        <div class="img-wrap">
+          ${item.soldOut ? '<div class="sold-badge">SOLD OUT</div>' : ''}
+          <img src="${item.img}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+        </div>
         <div class="card-body">
           <div class="title">${item.name}</div>
           <div class="price">₹${item.price}</div>
           <div class="qty-control">
-            <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, -1, this)">-</button>
+            <button class="qty-btn" ${item.soldOut ? 'disabled style=\"background:#ccc;cursor:not-allowed;\"' : ''} onclick="changeQty('${item.name}', ${item.price}, -1, this)">-</button>
             <span>${qty}</span>
-            <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, 1, this)">+</button>
+            <button class="qty-btn" ${item.soldOut ? 'disabled style=\"background:#ccc;cursor:not-allowed;\"' : ''} onclick="changeQty('${item.name}', ${item.price}, 1, this)">+</button>
           </div>
         </div>
       </div>
